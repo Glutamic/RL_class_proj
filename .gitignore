@@ -151,3 +151,5 @@ tensorboard_logs/
 data/ # If you have large datasets not suitable for git
 
 agilerl-2.2.8
+videos/
+wandb

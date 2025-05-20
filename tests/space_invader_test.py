@@ -67,7 +67,7 @@ if __name__ == "__main__":
     )
 
     # Load the saved algorithm into the MADDPG object
-    path = "./models/MADDPG/MADDPG_trained_agent.pt"
+    path = "./models/MADDPG/SpaceInvader/MADDPG_trained_agent.pt"
     maddpg.load_checkpoint(path)
 
     # Define test loop parameters

@@ -46,7 +46,7 @@ if __name__ == "__main__":
         "DT": 0.01,  # Timestep for OU noise
         "LR_ACTOR": 0.001,  # Actor learning rate
         "LR_CRITIC": 0.001,  # Critic learning rate
-        "GAMMA": 0.95,  # Discount factor
+        "GAMMA": 0.99,  # Discount factor
         "MEMORY_SIZE": 100000,  # Max memory buffer size
         "LEARN_STEP": 100,  # Learning frequency
         "TAU": 0.01,  # For soft update of target parameters
@@ -142,7 +142,7 @@ if __name__ == "__main__":
                 action = cont_actions
 
             # Act in environment
-            action = {agent: env.action_space(agent).sample() for agent in env.agents}
+            # action = {agent: env.action_space(agent).sample() for agent in env.agents}
             next_obs, reward, termination, truncation, info = env.step(action)
             if not termination:
                 assert False
@@ -236,7 +236,7 @@ if __name__ == "__main__":
         agent.steps.append(agent.steps[-1])
 
     # Save the trained algorithm
-    path = "./models/MADDPG"
+    path = "./models/MADDPG/SpaceInvader"
     filename = "MADDPG_trained_agent.pt"
     os.makedirs(path, exist_ok=True)
     save_path = os.path.join(path, filename)
