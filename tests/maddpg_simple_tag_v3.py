@@ -13,19 +13,21 @@ from agilerl.algorithms.core.registry import HyperparameterConfig, RLParameter
 # Type hinting for clarity (optional, but good practice)
 from agilerl.training.train_multi_agent_off_policy import PopulationType, InitDictType # From function signature
 from typing import List, Optional, Tuple # From function signature
+import wandb
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"===== Using {device} for training =====")
 
 # --- 1. 定义网络配置 (Network Configuration) ---
 NET_CONFIG_ACTOR_CRITIC = { # More explicit naming for clarity when debugging INIT_HP
-    "head_config": {"hidden_size": [32, 32]}  # Actor head hidden size
+        "head_config": {"hidden_size": [64, 32]},  # Actor head hidden size
 }
 
 # --- 2. 定义初始超参数 (Initial Hyperparameters) ---
 INIT_HP: InitDictType = { # Use type hint
     "CHANNELS_LAST": False,
-    "BATCH_SIZE": 32,   # 1024
+    "BATCH_SIZE": 1024,   # 1024
     "O_U_NOISE": True,
     "EXPL_NOISE": 0.1,
     "MEAN_NOISE": 0.0,
@@ -42,7 +44,7 @@ INIT_HP: InitDictType = { # Use type hint
     "ALGO": "MADDPG",
 }
 
-num_envs = 32
+num_envs = 8
 ENV_NAME = 'simple_tag_v3_agilerl'
 
 # --- 3. 创建向量化的 PettingZoo 环境 ---
@@ -111,7 +113,7 @@ mutations: Optional[Mutations] = Mutations( # Use type hint
 )
 
 # --- 8. 定义传递给 train_multi_agent_off_policy 的参数 ---
-max_train_steps = 20000   # 200000
+max_train_steps = 200000   # 200000
 training_steps = 10000  # Frequency at which we evaluate training score
 evo_period_steps = 5000 #  More reasonable evolution frequency than default 25
 eval_episodes = 1 # 3 Number of episodes to run for evaluation
@@ -166,15 +168,15 @@ trained_pop_final, fitnesses_final = train_multi_agent_off_policy(
     target=target_training_score,
     tournament=tournament,
     mutation=mutations,
-    checkpoint=5000,  # Checkpoint every evo_steps (or other frequency)
+    checkpoint=10000,  # Checkpoint every evo_steps (or other frequency)
     checkpoint_path=checkpoint_save_path,
     overwrite_checkpoints=False, # Set to True if you want to overwrite
     save_elite=True, # Save the best performing agent at the end
     elite_path=elite_agent_path,
-    wb=False,
+    wb=True,
     verbose=True,
     accelerator=None, # Not using HuggingFace Accelerate in this basic example
-    wandb_api_key=None
+    wandb_api_key="bd9fa016592d0c29f46d4158d4716e3e457bfa42"
 )
 
 print("===== Training Complete =====")
