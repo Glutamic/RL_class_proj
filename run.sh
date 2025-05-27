@@ -1,1 +1,0 @@
-python tests/maddpg_simple_tag_v3.py --max_train_steps 500000 --evo_period_steps 20000 --learning_delay_steps 4096 --batch_size 1024 --num_envs 16 --use_wandb

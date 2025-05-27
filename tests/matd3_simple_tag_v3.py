@@ -18,8 +18,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MADDPG training for Simple Tag environment')
     
     # 训练相关参数
-    parser.add_argument('--max_train_steps', type=int, default=500000, help='Maximum training steps')
-    parser.add_argument('--evo_period_steps', type=int, default=25000, help='Evolution period steps')
+    parser.add_argument('--max_train_steps', type=int, default=2000000, help='Maximum training steps')
+    parser.add_argument('--evo_period_steps', type=int, default=1000, help='Evolution period steps')
     parser.add_argument('--eval_episodes', type=int, default=1, help='Number of evaluation episodes')
     parser.add_argument('--learning_delay_steps', type=int, default=4096, help='Learning delay steps')
     
@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('--lr_actor', type=float, default=0.001, help='Learning rate for actor')
     parser.add_argument('--lr_critic', type=float, default=0.001, help='Learning rate for critic')
     parser.add_argument('--memory_size', type=int, default=100000, help='Size of replay buffer')
-    parser.add_argument('--pop_size', type=int, default=2, help='Population size')
+    parser.add_argument('--pop_size', type=int, default=4, help='Population size')
     
     # 环境相关
     parser.add_argument('--num_envs', type=int, default=8, help='Number of parallel environments')
@@ -74,7 +74,7 @@ INIT_HP: InitDictType = { # Use type hint
     "TAU": 0.01,
     "POLICY_FREQ": 2,
     "POP_SIZE": args.pop_size,
-    "ALGO": "MADDPG",
+    "ALGO": "MATD3",
 }
 
 num_envs = args.num_envs
