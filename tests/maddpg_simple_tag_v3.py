@@ -6,15 +6,44 @@ from agilerl.hpo.mutation import Mutations
 from agilerl.hpo.tournament import TournamentSelection
 from agilerl.utils.utils import create_population
 from agilerl.vector.pz_async_vec_env import AsyncPettingZooVecEnv
-from agilerl.training.train_multi_agent_off_policy import train_multi_agent_off_policy # Correct import
+from agilerl.training.train_multi_agent_off_policy import train_multi_agent_off_policy
 from agilerl.algorithms.core.registry import HyperparameterConfig, RLParameter
-
-
-# Type hinting for clarity (optional, but good practice)
-from agilerl.training.train_multi_agent_off_policy import PopulationType, InitDictType # From function signature
-from typing import List, Optional, Tuple # From function signature
+from agilerl.training.train_multi_agent_off_policy import PopulationType, InitDictType
+from typing import List, Optional, Tuple
 import wandb
+import argparse
 
+# 添加命令行参数解析
+def parse_args():
+    parser = argparse.ArgumentParser(description='MADDPG training for Simple Tag environment')
+    
+    # 训练相关参数
+    parser.add_argument('--max_train_steps', type=int, default=200000, help='Maximum training steps')
+    parser.add_argument('--training_steps', type=int, default=10000, help='Frequency of training evaluation')
+    parser.add_argument('--evo_period_steps', type=int, default=5000, help='Evolution period steps')
+    parser.add_argument('--eval_episodes', type=int, default=1, help='Number of evaluation episodes')
+    parser.add_argument('--learning_delay_steps', type=int, default=500, help='Learning delay steps')
+    
+    # 算法超参数
+    parser.add_argument('--batch_size', type=int, default=1024, help='Batch size for training')
+    parser.add_argument('--lr_actor', type=float, default=0.001, help='Learning rate for actor')
+    parser.add_argument('--lr_critic', type=float, default=0.001, help='Learning rate for critic')
+    parser.add_argument('--memory_size', type=int, default=100000, help='Size of replay buffer')
+    parser.add_argument('--pop_size', type=int, default=2, help='Population size')
+    
+    # 环境相关
+    parser.add_argument('--num_envs', type=int, default=8, help='Number of parallel environments')
+    
+    # 其他配置
+    parser.add_argument('--checkpoint_freq', type=int, default=10000, help='Checkpoint saving frequency')
+    parser.add_argument('--use_wandb', action='store_true', help='Whether to use wandb')
+    parser.add_argument('--wandb_key', type=str, default="bd9fa016592d0c29f46d4158d4716e3e457bfa42", help='WandB API key')
+    
+    args = parser.parse_args()
+    return args
+
+# 解析命令行参数
+args = parse_args()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"===== Using {device} for training =====")
@@ -27,24 +56,24 @@ NET_CONFIG_ACTOR_CRITIC = { # More explicit naming for clarity when debugging IN
 # --- 2. 定义初始超参数 (Initial Hyperparameters) ---
 INIT_HP: InitDictType = { # Use type hint
     "CHANNELS_LAST": False,
-    "BATCH_SIZE": 1024,   # 1024
+    "BATCH_SIZE": args.batch_size,   # 1024
     "O_U_NOISE": True,
     "EXPL_NOISE": 0.1,
     "MEAN_NOISE": 0.0,
     "THETA": 0.15,
     "DT": 0.01,
-    "LR_ACTOR": 0.001,
-    "LR_CRITIC": 0.001,
+    "LR_ACTOR": args.lr_actor,
+    "LR_CRITIC": args.lr_critic,
     "GAMMA": 0.99,
-    "MEMORY_SIZE": 100000,
+    "MEMORY_SIZE": args.memory_size,
     "LEARN_STEP": 20,   # 5
     "TAU": 0.01,
     "POLICY_FREQ": 2,
-    "POP_SIZE": 2,
+    "POP_SIZE": args.pop_size,
     "ALGO": "MADDPG",
 }
 
-num_envs = 8
+num_envs = args.num_envs
 ENV_NAME = 'simple_tag_v3_agilerl'
 
 # --- 3. 创建向量化的 PettingZoo 环境 ---
@@ -113,11 +142,11 @@ mutations: Optional[Mutations] = Mutations( # Use type hint
 )
 
 # --- 8. 定义传递给 train_multi_agent_off_policy 的参数 ---
-max_train_steps = 200000   # 200000
-training_steps = 10000  # Frequency at which we evaluate training score
-evo_period_steps = 5000 #  More reasonable evolution frequency than default 25
-eval_episodes = 1 # 3 Number of episodes to run for evaluation
-learning_delay_steps = 500  # INIT_HP["BATCH_SIZE"] * 5
+max_train_steps = args.max_train_steps   # 200000
+training_steps = args.training_steps  # Frequency at which we evaluate training score
+evo_period_steps = args.evo_period_steps #  More reasonable evolution frequency than default 25
+eval_episodes = args.eval_episodes # 3 Number of episodes to run for evaluation
+learning_delay_steps = args.learning_delay_steps  # INIT_HP["BATCH_SIZE"] * 5
 target_training_score: Optional[float] = None # No specific target score for early stopping
 
 import datetime
@@ -168,15 +197,15 @@ trained_pop_final, fitnesses_final = train_multi_agent_off_policy(
     target=target_training_score,
     tournament=tournament,
     mutation=mutations,
-    checkpoint=10000,  # Checkpoint every evo_steps (or other frequency)
+    checkpoint=args.checkpoint_freq,  # Checkpoint every evo_steps (or other frequency)
     checkpoint_path=checkpoint_save_path,
     overwrite_checkpoints=False, # Set to True if you want to overwrite
     save_elite=True, # Save the best performing agent at the end
     elite_path=elite_agent_path,
-    wb=True,
+    wb=args.use_wandb,
     verbose=True,
     accelerator=None, # Not using HuggingFace Accelerate in this basic example
-    wandb_api_key="bd9fa016592d0c29f46d4158d4716e3e457bfa42"
+    wandb_api_key=args.wandb_key
 )
 
 print("===== Training Complete =====")
