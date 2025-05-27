@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('--lr_actor', type=float, default=0.001, help='Learning rate for actor')
     parser.add_argument('--lr_critic', type=float, default=0.001, help='Learning rate for critic')
     parser.add_argument('--memory_size', type=int, default=100000, help='Size of replay buffer')
-    parser.add_argument('--pop_size', type=int, default=2, help='Population size')
+    parser.add_argument('--pop_size', type=int, default=4, help='Population size')
     
     # 环境相关
     parser.add_argument('--num_envs', type=int, default=8, help='Number of parallel environments')

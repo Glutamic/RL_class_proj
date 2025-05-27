@@ -1,1 +1,1 @@
-python tests/matd3_simple_tag_v3.py --max_train_steps 2000000 --evo_period_steps 1000 --learning_delay_steps 4096 --batch_size 1024 --num_envs 16 --use_wandb
+python tests/matd3_simple_tag_v3.py --max_train_steps 2000000 --evo_period_steps 1000 --learning_delay_steps 4096 --batch_size 1024 --num_envs 16 --pop_size 4 --use_wandb
