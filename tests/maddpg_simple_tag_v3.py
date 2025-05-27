@@ -18,11 +18,11 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MADDPG training for Simple Tag environment')
     
     # 训练相关参数
-    parser.add_argument('--max_train_steps', type=int, default=200000, help='Maximum training steps')
-    parser.add_argument('--training_steps', type=int, default=10000, help='Frequency of training evaluation')
-    parser.add_argument('--evo_period_steps', type=int, default=5000, help='Evolution period steps')
+    parser.add_argument('--max_train_steps', type=int, default=500000, help='Maximum training steps')
+    parser.add_argument('--training_steps', type=int, default=20000, help='Frequency of training evaluation')
+    parser.add_argument('--evo_period_steps', type=int, default=25000, help='Evolution period steps')
     parser.add_argument('--eval_episodes', type=int, default=1, help='Number of evaluation episodes')
-    parser.add_argument('--learning_delay_steps', type=int, default=500, help='Learning delay steps')
+    parser.add_argument('--learning_delay_steps', type=int, default=4096, help='Learning delay steps')
     
     # 算法超参数
     parser.add_argument('--batch_size', type=int, default=1024, help='Batch size for training')
