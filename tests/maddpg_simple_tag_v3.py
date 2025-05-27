@@ -19,7 +19,6 @@ def parse_args():
     
     # 训练相关参数
     parser.add_argument('--max_train_steps', type=int, default=500000, help='Maximum training steps')
-    parser.add_argument('--training_steps', type=int, default=20000, help='Frequency of training evaluation')
     parser.add_argument('--evo_period_steps', type=int, default=25000, help='Evolution period steps')
     parser.add_argument('--eval_episodes', type=int, default=1, help='Number of evaluation episodes')
     parser.add_argument('--learning_delay_steps', type=int, default=4096, help='Learning delay steps')
@@ -142,9 +141,8 @@ mutations: Optional[Mutations] = Mutations( # Use type hint
 )
 
 # --- 8. 定义传递给 train_multi_agent_off_policy 的参数 ---
-max_train_steps = args.max_train_steps   # 200000
-training_steps = args.training_steps  # Frequency at which we evaluate training score
-evo_period_steps = args.evo_period_steps #  More reasonable evolution frequency than default 25
+max_train_steps = args.max_train_steps
+evo_period_steps = args.evo_period_steps
 eval_episodes = args.eval_episodes # 3 Number of episodes to run for evaluation
 learning_delay_steps = args.learning_delay_steps  # INIT_HP["BATCH_SIZE"] * 5
 target_training_score: Optional[float] = None # No specific target score for early stopping
