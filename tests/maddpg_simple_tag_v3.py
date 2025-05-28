@@ -18,7 +18,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MADDPG training for Simple Tag environment')
     
     # 训练相关参数
-    parser.add_argument('--max_train_steps', type=int, default=500000, help='Maximum training steps')
+    parser.add_argument('--max_train_steps', type=int, default=2000000, help='Maximum training steps')
     parser.add_argument('--evo_period_steps', type=int, default=25000, help='Evolution period steps')
     parser.add_argument('--eval_episodes', type=int, default=1, help='Number of evaluation episodes')
     parser.add_argument('--learning_delay_steps', type=int, default=4096, help='Learning delay steps')
@@ -27,14 +27,14 @@ def parse_args():
     parser.add_argument('--batch_size', type=int, default=1024, help='Batch size for training')
     parser.add_argument('--lr_actor', type=float, default=0.001, help='Learning rate for actor')
     parser.add_argument('--lr_critic', type=float, default=0.001, help='Learning rate for critic')
-    parser.add_argument('--memory_size', type=int, default=100000, help='Size of replay buffer')
+    parser.add_argument('--memory_size', type=int, default=200000, help='Size of replay buffer')
     parser.add_argument('--pop_size', type=int, default=4, help='Population size')
     
     # 环境相关
     parser.add_argument('--num_envs', type=int, default=8, help='Number of parallel environments')
     
     # 其他配置
-    parser.add_argument('--checkpoint_freq', type=int, default=10000, help='Checkpoint saving frequency')
+    parser.add_argument('--checkpoint_freq', type=int, default=200000, help='Checkpoint saving frequency')
     parser.add_argument('--use_wandb', action='store_true', help='Whether to use wandb')
     parser.add_argument('--wandb_key', type=str, default="bd9fa016592d0c29f46d4158d4716e3e457bfa42", help='WandB API key')
     

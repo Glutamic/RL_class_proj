@@ -66,15 +66,23 @@ INIT_HP: InitDictType = { # Use type hint
     "MEAN_NOISE": 0.0,
     "THETA": 0.15,
     "DT": 0.01,
-    "LR_ACTOR": args.lr_actor,
-    "LR_CRITIC": args.lr_critic,
+    "LR": 1e-4,
+    "GAE_LAMBDA": 0.95, 
+    "ACTION_STD_INIT": 0.0, 
+    "CLIP_COEF": 0.2,
+    "ENT_COEF": 0.01,
+    "VF_COEF": 0.5,
+    "MAX_GRAD_NORM":0.5, 
+    "TARGET_KL": None,
     "GAMMA": 0.99,
+    "UPDATE_EPOCHS":4,
+    "ACTION_BATCH_SIZE":None,
     "MEMORY_SIZE": args.memory_size,
     "LEARN_STEP": 20,   # 5
     "TAU": 0.01,
     "POLICY_FREQ": 2,
     "POP_SIZE": args.pop_size,
-    "ALGO": "MATD3",
+    "ALGO": "IPPO",
 }
 
 num_envs = args.num_envs
@@ -95,8 +103,6 @@ INIT_HP["N_AGENTS"] = vec_env.num_agents
 INIT_HP["AGENT_IDS"] = vec_env.agents
 
 hp_config = HyperparameterConfig(
-        lr_actor=RLParameter(min=1e-4, max=1e-2),
-        lr_critic=RLParameter(min=1e-4, max=1e-2),
         batch_size=RLParameter(min=8, max=512, dtype=int),
         learn_step=RLParameter(
             min=20, max=200, dtype=int, grow_factor=1.5, shrink_factor=0.75
