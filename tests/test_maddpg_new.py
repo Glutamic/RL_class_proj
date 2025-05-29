@@ -25,7 +25,7 @@ def _label_with_episode_number(frame, episode_num):
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    env = simple_tag_v3.parallel_env(render_mode="rgb_array", max_cycles=100, continuous_actions=False, dynamic_rescaling=True)
+    env = simple_tag_v3.parallel_env(num_adversaries=1, num_obstacles=1, continuous_actions=False, render_mode="rgb_array", max_cycles=100, dynamic_rescaling=True)
     env.reset()
     observation_spaces = [env.observation_space(agent) for agent in env.agents]
     action_spaces = [env.action_space(agent) for agent in env.agents]
@@ -33,21 +33,12 @@ if __name__ == "__main__":
     n_agents = env.num_agents
     agent_ids = env.agents
 
-    NET_CONFIG = {
-            "encoder_config": {
-                "hidden_size": [128, 128],
-            },
-            "head_config": {
-                "hidden_size": [128, 64],
-            },
-        }
-
-    path = "/home/guchengou/MARL_Project/elite_agents/simple_tag_v3_agilerl_MATD3/elite_agent_simple_tag_v3_agilerl_MADDPG_20250529_004611.pt"
+    path = "/root/MARL_Project/elite_agents/simple_tag_v3_agilerl_MADDPG/20250529_004611/elite_agent_simple_tag_v3_agilerl_MADDPG_20250529_004611.pt"
     agent = MADDPG.load(path, device)
     print(f"MADDPG 智能体已初始化。使用的设备: {agent.device}")
 
     # 定义测试循环参数
-    episodes = 3  # 测试的回合数
+    episodes = 10  # 测试的回合数
     max_steps = 500 # 每个回合的最大步数使用环境的 max_cycles
 
     rewards = []  # List to collect total episodic reward
@@ -65,13 +56,11 @@ if __name__ == "__main__":
             cont_actions, discrete_action = agent.get_action(
                 state, training=False, infos=info
             )
-            action = discrete_action
-            print(action)
+            action = {agent: action.item() for agent, action in discrete_action.items()}
             # Save the frame for this step and append to frames list
             frame = env.render()
             frames.append(_label_with_episode_number(frame, episode_num=ep))
             # Take action in environment
-            print(action)
             state, reward, termination, truncation, info = env.step(action)
 
             # Save agent's reward for this step in this episode
