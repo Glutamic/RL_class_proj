@@ -1,6 +1,6 @@
 from mpe2 import simple_tag_v3
 from matplotlib import pyplot as plt
-from agilerl.algorithms.maddpg import MADDPG # 导入 MADDPG 算法
+from agilerl.algorithms import MATD3 # 导入 MADDPG 算法
 import os
 import imageio
 import numpy as np
@@ -20,7 +20,6 @@ def parse_args():
     parser.add_argument('--num_obs', type=int, default=1, help='Obstacles Num')
     args = parser.parse_args()
     return args
-
 
 def _label_with_episode_number(frame, episode_num):
     im = Image.fromarray(frame)
@@ -49,7 +48,7 @@ if __name__ == "__main__":
     agent_ids = env.agents
 
     path = args.path
-    agent = MADDPG.load(path, device)
+    agent = MATD3.load(path, device)
     print(f"MADDPG 智能体已初始化。使用的设备: {agent.device}")
 
     # 定义测试循环参数
@@ -105,5 +104,5 @@ if __name__ == "__main__":
     gif_path = "./videos/"
     os.makedirs(gif_path, exist_ok=True)
     imageio.mimwrite(
-        os.path.join("./videos/", "simple_tag_maddpg.gif"), frames, duration=10
+        os.path.join("./videos/", "simple_tag_matd3.gif"), frames, duration=10
     )

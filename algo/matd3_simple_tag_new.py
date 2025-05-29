@@ -3,11 +3,10 @@ import torch
 from mpe2 import simple_tag_v3
 from tqdm import trange
 import copy
-from agilerl.algorithms import MADDPG
+from agilerl.algorithms import MATD3
 from agilerl.components.multi_agent_replay_buffer import MultiAgentReplayBuffer
 from agilerl.vector.pz_async_vec_env import AsyncPettingZooVecEnv
 from agilerl.utils.algo_utils import obs_channels_to_first
-
 import datetime
 import os # 导入 os 模块来创建文件夹
 current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -53,7 +52,7 @@ NET_CONFIG = {
         },
     }
 
-agent = MADDPG(
+agent = MATD3(
     observation_spaces=observation_spaces,
     action_spaces=action_spaces,
     agent_ids=agent_ids,
@@ -183,11 +182,11 @@ while np.less(agent.steps[-1], max_steps):
     agent.steps.append(agent.steps[-1])
 
 # Save the trained algorithm
-elite_base_path = f"./elite_agents/simple_tag_v3_agilerl_MADDPG"
+elite_base_path = f"./elite_agents/simple_tag_v3_agilerl_MATD3"
 
 # 结合时间戳创建具体的保存路径
 elite_agent_save_path = f"{elite_base_path}/{current_time}/" 
-elite_agent_filename = f"elite_agent_simple_tag_v3_agilerl_MADDPG_{num_good}_{num_adversaries}_{num_obstacles}_.pt"
+elite_agent_filename = f"elite_agent_simple_tag_v3_agilerl_MATD3_{num_good}_{num_adversaries}_{num_obstacles}_.pt"
 
 if not os.path.exists(elite_agent_save_path):
     os.makedirs(elite_agent_save_path)

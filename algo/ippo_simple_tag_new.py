@@ -76,6 +76,7 @@ while np.less(agent.steps[-1], max_steps):
     completed_episode_scores = []
 
     for idx_step in range(training_steps // num_envs):
+        print(idx_step)
         # Get next action from agent
         states = {agent_id: [] for agent_id in agent.agent_ids}
         actions = {agent_id: [] for agent_id in agent.agent_ids}
@@ -86,8 +87,7 @@ while np.less(agent.steps[-1], max_steps):
 
         done = {agent_id: np.zeros(num_envs) for agent_id in agent.agent_ids}
 
-        for idx_step in range(-(agent.learn_step // -num_envs)):
-
+        for idk in range(-(agent.learn_step // -num_envs)):
             # Get next action from agent
             action, log_prob, _, value = agent.get_action(obs=state, infos=info)
 

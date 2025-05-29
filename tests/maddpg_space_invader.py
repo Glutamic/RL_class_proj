@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     # Define training loop parameters
     agent_ids = deepcopy(env.agents)
-    max_steps = 20000  # Max steps (default: 2000000)
+    max_steps = 2000000  # Max steps (default: 2000000)
     learning_delay = 500  # Steps before starting learning
     training_steps = 10000  # Frequency at which we evaluate training score
     eval_steps = None  # Evaluation steps per episode - go until done
@@ -142,7 +142,7 @@ if __name__ == "__main__":
                 action = cont_actions
 
             # Act in environment
-            # action = {agent: env.action_space(agent).sample() for agent in env.agents}
+            action = {agent: env.action_space(agent).sample() for agent in env.agents}
             next_obs, reward, termination, truncation, info = env.step(action)
             if not termination:
                 assert False
