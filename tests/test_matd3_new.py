@@ -31,7 +31,7 @@ def _label_with_episode_number(frame, episode_num):
     else:
         text_color = (0, 0, 0)
     drawer.text(
-        (im.size[0] / 20, im.size[1] / 18), f"回合: {episode_num+1}", fill=text_color
+        (im.size[0] / 20, im.size[1] / 18), f"Episode: {episode_num+1}", fill=text_color
     )
     return im
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     # 定义测试循环参数
     episodes = 5  # 测试的回合数
-    max_steps = 100 # 每个回合的最大步数使用环境的 max_cycles
+    max_steps = 30 # 每个回合的最大步数使用环境的 max_cycles
 
     rewards = []  # List to collect total episodic reward
     frames = []  # 收集帧用于制作 GIF
@@ -103,6 +103,8 @@ if __name__ == "__main__":
     # Save the gif to specified path
     gif_path = "./videos/"
     os.makedirs(gif_path, exist_ok=True)
+    save_path = os.path.join("./videos/", f"simple_tag_matd3_{args.num_good}_{args.num_advs}_{args.num_obs}.gif")
     imageio.mimwrite(
-        os.path.join("./videos/", "simple_tag_matd3.gif"), frames, duration=10
+        os.path.join(save_path), frames, duration=10
     )
+    print(f"gif save to {save_path}")
